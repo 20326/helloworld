@@ -1349,10 +1349,11 @@ creat_v2ray_json() {
 		local ws="null"
 		local h2="null"
 		local tls="null"
+		local xtls="null"
 
 		# tcp和kcp下tlsSettings为null，ws和h2下tlsSettings
 		[ -z "$ss_basic_v2ray_mux_concurrency" ] && local ss_basic_v2ray_mux_concurrency=8
-		[ "$ss_basic_v2ray_network_security" == "none" ] && local ss_basic_v2ray_network_security=""
+		#[ "$ss_basic_v2ray_network_security" == "none" ] && local ss_basic_v2ray_network_security=""
 		#if [ "$ss_basic_v2ray_network" == "ws" -o "$ss_basic_v2ray_network" == "h2" ];then
 		case "$ss_basic_v2ray_network_security" in
 		tls)
@@ -1361,10 +1362,19 @@ creat_v2ray_json() {
 					\"serverName\": null
 					}"
 			;;
+		xtls)
+			local xtls="{
+					\"serverName\": \"$ss_basic_v2ray_network_host\"
+					}"
+			;;
+		none)
+			local ss_basic_v2ray_network_security=""
+			;;
 		*)
 			local tls="null"
 			;;
 		esac
+
 		#fi
 		# incase multi-domain input
 		if [ "$(echo $ss_basic_v2ray_network_host | grep ",")" ]; then
@@ -1502,11 +1512,14 @@ creat_v2ray_json() {
 			EOF
 		fi
 		# outbounds area
+		# if [ -n $ss_basic_v2ray_protocol  ]; then
+		# 	ss_basic_v2ray_protocol="vmess"
+		# fi
 		cat >>"$V2RAY_CONFIG_FILE_TMP" <<-EOF
 			"outbounds": [
 				{
 					"tag": "agentout",
-					"protocol": "vmess",
+					"protocol": "$ss_basic_v2ray_protocol",
 					"settings": {
 						"vnext": [
 							{
@@ -1516,7 +1529,9 @@ creat_v2ray_json() {
 									{
 										"id": "$ss_basic_v2ray_uuid",
 										"alterId": $ss_basic_v2ray_alterid,
-										"security": "$ss_basic_v2ray_security"
+										"security": "$ss_basic_v2ray_security",
+										"encryption": "none",
+										"flow": "$ss_basic_v2ray_network_flow"
 									}
 								]
 							}
@@ -1530,7 +1545,8 @@ creat_v2ray_json() {
 						"tcpSettings": $tcp,
 						"kcpSettings": $kcp,
 						"wsSettings": $ws,
-						"httpSettings": $h2
+						"httpSettings": $h2,
+						"xtlsSettings": $xtls
 					},
 					"mux": {
 						"enabled": $(get_function_switch $ss_basic_v2ray_mux_enable),
@@ -1568,7 +1584,7 @@ creat_v2ray_json() {
 								},
 								\"inbounds\": [
 									{
-										\"protocol\": \"dokodemo-door\", 
+										\"protocol\": \"dokodemo-door\",
 										\"port\": $DNSF_PORT,
 										\"settings\": {
 											\"address\": \"8.8.8.8\",
@@ -1628,7 +1644,7 @@ creat_v2ray_json() {
 		# 检测用户json的服务器ip地址
 		v2ray_protocal=$(cat "$V2RAY_CONFIG_FILE" | jq -r .outbounds[0].protocol)
 		case $v2ray_protocal in
-		vmess)
+		vmess|vless)
 			v2ray_server=$(cat "$V2RAY_CONFIG_FILE" | jq -r .outbounds[0].settings.vnext[0].address)
 			;;
 		socks)

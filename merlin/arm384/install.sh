@@ -7,7 +7,6 @@ FW_TYPE_CODE=
 FW_TYPE_NAME=
 DIR=$(cd $(dirname $0); pwd)
 module=${DIR##*/}
-echo_date "当前包: ${module}"
 
 get_model(){
 	local ODMPID=$(nvram get odmpid)

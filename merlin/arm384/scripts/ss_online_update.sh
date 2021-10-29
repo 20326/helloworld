@@ -35,6 +35,7 @@ readonly PREFIX="ssconf_basic_name_
 				ssconf_basic_weight_
 				ssconf_basic_group_
 				ssconf_basic_v2ray_use_json_
+				ssconf_basic_v2ray_protocol_
 				ssconf_basic_v2ray_uuid_
 				ssconf_basic_v2ray_alterid_
 				ssconf_basic_v2ray_security_
@@ -44,6 +45,7 @@ readonly PREFIX="ssconf_basic_name_
 				ssconf_basic_v2ray_network_path_
 				ssconf_basic_v2ray_network_host_
 				ssconf_basic_v2ray_network_security_
+				ssconf_basic_v2ray_network_flow_
 				ssconf_basic_v2ray_mux_enable_
 				ssconf_basic_v2ray_mux_concurrency_
 				ssconf_basic_v2ray_json_
@@ -301,17 +303,28 @@ get_ss_config(){
 get_v2ray_remote_config(){
 	decode_link="$1"
 	v2ray_group="$2"
+	echo_date "get_v2ray_remote_config decode_link: $decode_link  \ngroup: ${v2ray_group}"
+
 	v2ray_v=$(echo "$decode_link" | jq -r .v)
 	v2ray_ps=$(echo "$decode_link" | jq -r .ps | sed 's/[ \t]*//g')
 	v2ray_add=$(echo "$decode_link" | jq -r .add | sed 's/[ \t]*//g')
 	v2ray_port=$(echo "$decode_link" | jq -r .port | sed 's/[ \t]*//g')
+	v2ray_protocol=$(echo "$decode_link"| awk -F':' '{print $1}' )
 	v2ray_id=$(echo "$decode_link" | jq -r .id | sed 's/[ \t]*//g')
 	v2ray_aid=$(echo "$decode_link" | jq -r .aid | sed 's/[ \t]*//g')
 	v2ray_net=$(echo "$decode_link" | jq -r .net)
+	v2ray_net_flow=$(echo "$decode_link" | jq -r .flow)
 	v2ray_type=$(echo "$decode_link" | jq -r .type)
 	v2ray_tls_tmp=$(echo "$decode_link" | jq -r .tls)
-	[ "$v2ray_tls_tmp"x == "tls"x ] && v2ray_tls="tls" || v2ray_tls="none"
-	
+
+	if [ "$v2ray_tls_tmp"x == "tls"x ]; then
+		v2ray_tls="tls"
+	elif [ "$v2ray_tls_tmp"x == "xtls"x ]; then
+		v2ray_tls="xtls"
+	else
+		v2ray_tls="none"
+	fi
+
 	if [ "$v2ray_v" == "2" ]; then
 		# "new format"
 		v2ray_path=$(echo "$decode_link" | jq -r .path)
@@ -353,18 +366,21 @@ get_v2ray_remote_config(){
 	[ -n "$v2ray_group" ] && [ -n "$v2ray_add" ] && echo $server_base64 $group_base64 >> /tmp/all_subscservers.txt
 
 	# for debug
-	# echo ------------------
-	# echo v2ray_v: $v2ray_v
-	# echo v2ray_ps: $v2ray_ps
-	# echo v2ray_add: $v2ray_add
-	# echo v2ray_port: $v2ray_port
-	# echo v2ray_id: $v2ray_id
-	# echo v2ray_net: $v2ray_net
-	# echo v2ray_type: $v2ray_type
-	# echo v2ray_host: $v2ray_host
-	# echo v2ray_path: $v2ray_path
-	# echo v2ray_tls: $v2ray_tls
-	# echo ------------------
+	echo ------------------
+	echo v2ray_v: $v2ray_v
+	echo v2ray_ps: $v2ray_ps
+	echo v2ray_add: $v2ray_add
+	echo v2ray_port: $v2ray_port
+	echo v2ray_id: $v2ray_id
+	echo v2ray_protocol: $v2ray_protocol
+	echo v2ray_net: $v2ray_net
+	echo v2ray_net_flow: $v2ray_net_flow
+	echo v2ray_type: $v2ray_type
+	echo v2ray_host: $v2ray_host
+	echo v2ray_path: $v2ray_path
+	echo v2ray_tls: $v2ray_tls
+	echo v2ray_net_flow: $v2ray_net_flow
+	echo ------------------
 	
 	[ -z "$v2ray_ps" -o -z "$v2ray_add" -o -z "$v2ray_port" -o -z "$v2ray_id" -o -z "$v2ray_aid" -o -z "$v2ray_net" -o -z "$v2ray_type" ] && return 1 || return 0
 }
@@ -380,10 +396,12 @@ add_v2ray_servers(){
 	dbus set ssconf_basic_name_$NODE_INDEX=$v2ray_ps
 	dbus set ssconf_basic_port_$NODE_INDEX=$v2ray_port
 	dbus set ssconf_basic_server_$NODE_INDEX=$v2ray_add
+	dbus set ssconf_basic_v2ray_protocol_$NODE_INDEX=$v2ray_protocol
 	dbus set ssconf_basic_v2ray_uuid_$NODE_INDEX=$v2ray_id
 	dbus set ssconf_basic_v2ray_alterid_$NODE_INDEX=$v2ray_aid
 	dbus set ssconf_basic_v2ray_network_security_$NODE_INDEX=$v2ray_tls
 	dbus set ssconf_basic_v2ray_network_$NODE_INDEX=$v2ray_net
+	dbus set ssconf_basic_v2ray_network_flow_$NODE_INDEX=$v2ray_net_flow
 	case $v2ray_net in
 	tcp)
 		# tcp协议设置【 tcp伪装类型 (type)】和【伪装域名 (host)】
@@ -416,17 +434,21 @@ update_v2ray_config(){
 		local local_v2ray_ps=$(eval echo \$ssconf_basic_name_$index)
 		local local_v2ray_add=$(eval echo \$ssconf_basic_server_$index)
 		local local_v2ray_port=$(eval echo \$ssconf_basic_port_$index)
+		local local_v2ray_protocol=$(eval echo \$ssconf_basic_v2ray_protocol_$index)
 		local local_v2ray_id=$(eval echo \$ssconf_basic_v2ray_uuid_$index)
 		local local_v2ray_aid=$(eval echo \$ssconf_basic_v2ray_alterid_$index)
 		local local_v2ray_tls=$(eval echo \$ssconf_basic_v2ray_network_security_$index)
 		local local_v2ray_net=$(eval echo \$ssconf_basic_v2ray_network_$index)
+		local local_v2ray_net_flow=$(eval echo \$ssconf_basic_v2ray_network_flow_$index)
 		[ "$local_v2ray_ps" != "$v2ray_ps" ] && dbus set ssconf_basic_name_$index=$v2ray_ps && let i+=1
 		[ "$local_v2ray_add" != "$v2ray_add" ] && dbus set ssconf_basic_server_$index=$v2ray_add && let i+=1
 		[ "$local_v2ray_port" != "$v2ray_port" ] && dbus set ssconf_basic_port_$index=$v2ray_port && let i+=1
+		[ "$local_v2ray_id" != "$v2ray_id" ] && dbus set ssconf_basic_v2ray_protocol_$index=$v2ray_protocol && let i+=1
 		[ "$local_v2ray_id" != "$v2ray_id" ] && dbus set ssconf_basic_v2ray_uuid_$index=$v2ray_id && let i+=1
 		[ "$local_v2ray_aid" != "$v2ray_aid" ] && dbus set ssconf_basic_v2ray_alterid_$index=$v2ray_aid && let i+=1
 		[ "$local_v2ray_tls" != "$v2ray_tls" ] && dbus set ssconf_basic_v2ray_network_security_$index=$v2ray_tls && let i+=1
 		[ "$local_v2ray_net" != "$v2ray_net" ] && dbus set ssconf_basic_v2ray_network_$index=$v2ray_net && let i+=1
+		[ "$local_v2ray_net" != "$v2ray_net" ] && dbus set ssconf_basic_v2ray_network_flow$index=$v2ray_net_flow && let i+=1
 		case $local_v2ray_net in
 		tcp)
 			# tcp协议
@@ -1038,10 +1060,11 @@ get_online_rule_now(){
 		echo_date "下载订阅成功..."
 		echo_date "开始解析节点信息..."
 		decode_url_link $(cat /tmp/ssr_subscribe_file.txt) > /tmp/ssr_subscribe_file_temp1.txt
-		# 检测 ss ssr vmess
+		# 检测 ss ssr vmess vless
 		NODE_FORMAT1=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -E "^ss://")
 		NODE_FORMAT2=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -E "^ssr://")
 		NODE_FORMAT3=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -E "^vmess://")
+		NODE_FORMAT4=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -E "^vless://")
 		if [ -n "$NODE_FORMAT1" ]; then
 			echo_date "暂时不支持ss节点订阅..."
 			echo_date "退出订阅程序..."
@@ -1086,7 +1109,8 @@ get_online_rule_now(){
 			echo_date "现共有自添加SSR节点：$USER_ADD 个；"
 			echo_date "现共有订阅SSR节点：$ONLINE_GET 个；"
 			echo_date "在线订阅列表更新完成!"
-		elif [ -n "$NODE_FORMAT3" ]; then
+		elif [ -n "$NODE_FORMAT3" || -n "$NODE_FORMAT4" ]; then
+			# TODO
 			# v2ray 订阅
 			# use domain as group
 			v2ray_group_tmp=$(echo $SUB_LINK | awk -F'[/:]' '{print $4}')
@@ -1096,14 +1120,14 @@ get_online_rule_now(){
 			# detect format again
 			if [ -n "$NODE_FORMAT1" ]; then
 				#vmess://里夹杂着ss://
-				local NODE_NU=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -Ec "vmess://|ss://")
+				local NODE_NU=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -Ec "vmess://|vless://|ss://")
 				echo_date "检测到vmess和ss节点格式，共计$NODE_NU个节点..."
 				urllinks=$(decode_url_link $(cat /tmp/ssr_subscribe_file.txt) | sed 's/ssr:\/\///g')
 			else
 				# 纯vmess://
-				local NODE_NU=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -Ec "vmess://")
+				local NODE_NU=$(cat /tmp/ssr_subscribe_file_temp1.txt | grep -Ec "vmess://|vless://")
 				echo_date "检测到vmess节点格式，共计$NODE_NU个节点..."
-				urllinks=$(decode_url_link $(cat /tmp/ssr_subscribe_file.txt) | sed 's/vmess:\/\///g')
+				urllinks=$(decode_url_link $(cat /tmp/ssr_subscribe_file.txt) | sed 's/vmess:\/\///g' | sed 's/vless:\/\///g' )
 				for link in $urllinks
 				do
 					decode_link=$(decode_url_link $link)
@@ -1266,7 +1290,7 @@ start_online_update(){
 	echo_date "==================================================================="
 }
 
-# 添加ss:// ssr:// vmess://离线节点
+# 添加ss:// ssr:// vmess:// vless://离线节点
 start_offline_update() {
 	echo_date "==================================================================="
 	usleep 100000
@@ -1286,9 +1310,9 @@ start_offline_update() {
 				decode_ssrlink=$(decode_url_link $new_ssrlink)
 				get_ssr_node_info $decode_ssrlink 2
 				add_ssr_nodes_offline
-			elif [ -n "$(echo -n "$ssrlink" | grep "vmess://")" ]; then
+			elif [ -n "$(echo -n "$ssrlink" | grep -E "vmess://|vless://")" ]; then
 				echo_date "检测到vmess链接...开始尝试解析..."
-				new_v2raylink=$(echo -n "$ssrlink" | sed 's/vmess:\/\///g')
+				new_v2raylink=$(echo -n "$ssrlink" | sed 's/vmess:\/\///g' | sed 's/vless:\/\///g')
 				decode_v2raylink=$(decode_url_link $new_v2raylink)
 				decode_v2raylink=$(echo $decode_v2raylink | jq -c .)
 				get_v2ray_remote_config $decode_v2raylink
@@ -1366,7 +1390,7 @@ case $2 in
 	unset_lock
 	;;
 4)
-	# 添加ss:// ssr:// vmess://离线节点
+	# 添加ss:// ssr:// vmess:// vless:// 离线节点
 	set_lock
 	echo " " > $LOG_FILE
 	http_response "$1"

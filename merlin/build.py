@@ -69,7 +69,7 @@ def build_module():
         cp -rf ../rules/gfwlist.conf $module_root/ss/rules/ && \
         cp -rf ../rules/chnroute.txt $module_root/ss/rules/ &&  \
         cp -rf ../rules/cdn.txt $module_root/ss/rules/ && \
-        cp -rf ../rules/version $module_root/ss/rules/version &&\
+        cp -rf ../rules/version.sum $module_root/ss/rules/version &&\
         cp -f  ../binary/$arch/xray/xray $module_root/bin/v2ray &&\
         cp -f  ../binary/$arch/xray/v2ctl $module_root/bin/v2ctl &&\
         echo 'sync finished!' """)
