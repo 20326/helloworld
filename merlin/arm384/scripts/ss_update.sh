@@ -8,16 +8,16 @@ mkdir -p /tmp/upload
 echo "" > /tmp/upload/ss_log.txt
 http_response "$1"
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
-main_url="https://raw.githubusercontent.com/20326/helloword/master/merlin"
+main_url="https://raw.githubusercontent.com/20326/helloworld/master/merlin"
 backup_url=""
 
 install_ss(){
 	echo_date 开始解压压缩包...
-	tar -zxf shadowsocks.tar.gz
-	chmod a+x /tmp/shadowsocks/install.sh
+	tar -zxf helloworld.tar.gz
+	chmod a+x /tmp/helloworld/install.sh
 	echo_date 开始安装更新文件...
-	sh /tmp/shadowsocks/install.sh
-	rm -rf /tmp/shadowsocks*
+	sh /tmp/helloworld/install.sh
+	rm -rf /tmp/helloworld*
 }
 
 update_ss(){
@@ -33,11 +33,11 @@ update_ss(){
 			cd /tmp
 			md5_web1=`curl -4sk --connect-timeout 5 $main_url/version | sed -n 2p`
 			echo_date 开启下载进程，从主服务器上下载更新包...
-			wget --no-check-certificate --timeout=5 "$main_url"/shadowsocks.tar.gz
-			md5sum_gz=`md5sum /tmp/shadowsocks.tar.gz | sed 's/ /\n/g'| sed -n 1p`
+			wget --no-check-certificate --timeout=5 "$main_url"/helloworld.tar.gz
+			md5sum_gz=`md5sum /tmp/helloworld.tar.gz | sed 's/ /\n/g'| sed -n 1p`
 			if [ "$md5sum_gz" != "$md5_web1" ]; then
 				echo_date 更新包md5校验不一致！估计是下载的时候出了什么状况，请等待一会儿再试...
-				rm -rf /tmp/shadowsocks* >/dev/null 2>&1
+				rm -rf /tmp/helloworld* >/dev/null 2>&1
 				sleep 1
 				echo_date 更换备用备用更新地址，请稍后...
 				sleep 1
@@ -64,7 +64,7 @@ update_ss(){
 
 update_ss2(){
 	echo_date "目前还没有任何备用服务器！请尝试使用离线安装功能！"
-	echo_date "历史版本下载地址：https://github.com/20326/helloword/release"
+	echo_date "历史版本下载地址：https://github.com/20326/helloworld/release"
 	echo_date "下载后请将下载包名字改为：helloworld.tar.gz，再使用软件中心离线安装功能进行安装！"
 	sleep 1
 	echo XU6J03M6

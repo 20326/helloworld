@@ -7,6 +7,7 @@ FW_TYPE_CODE=
 FW_TYPE_NAME=
 DIR=$(cd $(dirname $0); pwd)
 module=${DIR##*/}
+echo_date "当前: ${module}"
 
 get_model(){
 	local ODMPID=$(nvram get odmpid)
@@ -129,7 +130,7 @@ install_now(){
 	echo_date "清理旧文件"
 	rm -rf /koolshare/ss/*
 	rm -rf /koolshare/scripts/ss_*
-	rm -rf /koolshare/webs/Module_shadowsocks*
+	rm -rf /koolshare/webs/Module_helloworld*
 	rm -rf /koolshare/bin/ss-redir
 	rm -rf /koolshare/bin/ss-tunnel
 	rm -rf /koolshare/bin/ss-local
@@ -158,7 +159,7 @@ install_now(){
 	rm -rf /koolshare/bin/https_dns_proxy
 	rm -rf /koolshare/bin/httping
 	rm -rf /koolshare/bin/haveged
-	rm -rf /koolshare/res/icon-shadowsocks.png
+	rm -rf /koolshare/res/icon-helloworld.png
 	rm -rf /koolshare/res/ss-menu.js
 	rm -rf /koolshare/res/qrcode.js
 	rm -rf /koolshare/res/tablednd.js
@@ -166,8 +167,8 @@ install_now(){
 	rm -rf /koolshare/res/gfw.png
 	rm -rf /koolshare/res/chn.png
 	rm -rf /koolshare/res/game.png
-	rm -rf /koolshare/res/shadowsocks.css
-	find /koolshare/init.d/ -name "*shadowsocks.sh" | xargs rm -rf >/dev/null 2>&1
+	rm -rf /koolshare/res/helloworld.css
+	find /koolshare/init.d/ -name "*helloworld.sh" | xargs rm -rf >/dev/null 2>&1
 	find /koolshare/init.d/ -name "*socks5.sh" | xargs rm -rf >/dev/null 2>&1
 
 	# legacy files should be removed
@@ -176,14 +177,14 @@ install_now(){
 
 	# 386固件全面使用openssl1.1.1，弃用了openssl1.0.0，所以判断使用openssl1.1.1的使用新版本的httping
 	if [ -f "/usr/lib/libcrypto.so.1.1" ];then
-		mv /tmp/shadowsocks/bin/httping_openssl_1.1.1 /tmp/shadowsocks/bin/httping
+		mv /tmp/helloworld/bin/httping_openssl_1.1.1 /tmp/helloworld/bin/httping
 	else
-		rm -rf /tmp/shadowsocks/bin/httping_openssl_1.1.1
+		rm -rf /tmp/helloworld/bin/httping_openssl_1.1.1
 	fi
 
 	# 梅林386.2 引入了jitterentropy-rngd用以提高系统熵，所以haveged不再需要安装了
 	if [ -n "$(which jitterentropy-rngd)" ];then
-		rm -rf /tmp/shadowsocks/bin/haveged
+		rm -rf /tmp/helloworld/bin/haveged
 	fi
 
 	# 对于jffs分区过小的插件，删除某些功能的二进制文件，比如RT-AX56U_V2的jffs只有15MB，所以移除一些功能
@@ -204,36 +205,36 @@ install_now(){
 		echo_date "8. 负载均衡功能"
 		echo_date "其它功能，如ss、ssr、dns、负载均衡等功能不受影响！"
 		echo_date "-------------------------------------------------------------"
-		rm -rf /tmp/shadowsocks/bin/v2ray
-		rm -rf /tmp/shadowsocks/bin/v2ctl
-		rm -rf /tmp/shadowsocks/bin/v2ray-plugin
-		rm -rf /tmp/shadowsocks/bin/client_linux_arm7
-		rm -rf /tmp/shadowsocks/bin/koolgame
-		rm -rf /tmp/shadowsocks/bin/pdu
-		rm -rf /tmp/shadowsocks/bin/speederv1
-		rm -rf /tmp/shadowsocks/bin/speederv2
-		rm -rf /tmp/shadowsocks/bin/udp2raw
-		rm -rf /tmp/shadowsocks/bin/haproxy
-		rm -rf /tmp/shadowsocks/bin/obfs-local
-		rm -rf /tmp/shadowsocks/bin/smartdns
-		rm -rf /tmp/shadowsocks/bin/chinadns1
-		rm -rf /tmp/shadowsocks/bin/smartdns
-		rm -rf /tmp/shadowsocks/scripts/ss_lb_config.sh
-		rm -rf /tmp/shadowsocks/webs/Module_shadowsocks_lb.asp
-		sed -i 's/\, \[\"13\"\, \"SmartDNS\"\]//' /tmp/shadowsocks/webs/Module_shadowsocks.asp
-		sed -i 's/\, \[\"9\"\, \"SmartDNS\"\]//' /tmp/shadowsocks/webs/Module_shadowsocks.asp
-		sed -i 's/\, \[\"5\"\, \"chinadns1\"\]//' /tmp/shadowsocks/webs/Module_shadowsocks.asp
-		sed -i 's/\, \[\"2\"\, \"chinadns2\"\]//' /tmp/shadowsocks/webs/Module_shadowsocks.asp
-		sed -i 's/\, \"负载均衡设置\"//g' /tmp/shadowsocks/res/ss-menu.js
-		sed -i 's/\, \"Module_shadowsocks_lb\.asp\"//g' /tmp/shadowsocks/res/ss-menu.js
-		echo ".show-btn5, .show-btn6{display: none;}" >> /tmp/shadowsocks/res/shadowsocks.css
+		rm -rf /tmp/helloworld/bin/v2ray
+		rm -rf /tmp/helloworld/bin/v2ctl
+		rm -rf /tmp/helloworld/bin/v2ray-plugin
+		rm -rf /tmp/helloworld/bin/client_linux_arm7
+		rm -rf /tmp/helloworld/bin/koolgame
+		rm -rf /tmp/helloworld/bin/pdu
+		rm -rf /tmp/helloworld/bin/speederv1
+		rm -rf /tmp/helloworld/bin/speederv2
+		rm -rf /tmp/helloworld/bin/udp2raw
+		rm -rf /tmp/helloworld/bin/haproxy
+		rm -rf /tmp/helloworld/bin/obfs-local
+		rm -rf /tmp/helloworld/bin/smartdns
+		rm -rf /tmp/helloworld/bin/chinadns1
+		rm -rf /tmp/helloworld/bin/smartdns
+		rm -rf /tmp/helloworld/scripts/ss_lb_config.sh
+		rm -rf /tmp/helloworld/webs/Module_helloworld_lb.asp
+		sed -i 's/\, \[\"13\"\, \"SmartDNS\"\]//' /tmp/helloworld/webs/Module_helloworld.asp
+		sed -i 's/\, \[\"9\"\, \"SmartDNS\"\]//' /tmp/helloworld/webs/Module_helloworld.asp
+		sed -i 's/\, \[\"5\"\, \"chinadns1\"\]//' /tmp/helloworld/webs/Module_helloworld.asp
+		sed -i 's/\, \[\"2\"\, \"chinadns2\"\]//' /tmp/helloworld/webs/Module_helloworld.asp
+		sed -i 's/\, \"负载均衡设置\"//g' /tmp/helloworld/res/ss-menu.js
+		sed -i 's/\, \"Module_helloworld_lb\.asp\"//g' /tmp/helloworld/res/ss-menu.js
+		echo ".show-btn5, .show-btn6{display: none;}" >> /tmp/helloworld/res/helloworld.css
 	fi
 	sync
 
 	# 检测储存空间是否足够
 	echo_date "检测jffs分区剩余空间..."
 	SPACE_AVAL=$(df|grep jffs | awk '{print $4}')
-	SPACE_NEED=$(du -s /tmp/shadowsocks | awk '{print $1}')
+	SPACE_NEED=$(du -s /tmp/helloworld | awk '{print $1}')
 	if [ "$SPACE_AVAL" -gt "$SPACE_NEED" ];then
 		echo_date 当前jffs分区剩余"$SPACE_AVAL" KB, 插件安装大概需要"$SPACE_NEED" KB，空间满足，继续安装！
 	else
@@ -247,17 +248,17 @@ install_now(){
 	cd /tmp
 
 	echo_date "复制相关二进制文件！此步时间可能较长！"
-	cp -rf /tmp/shadowsocks/bin/* /koolshare/bin/
+	cp -rf /tmp/helloworld/bin/* /koolshare/bin/
 	
 	echo_date "复制相关的脚本文件！"
-	cp -rf /tmp/shadowsocks/ss /koolshare/
-	cp -rf /tmp/shadowsocks/scripts/* /koolshare/scripts/
-	cp -rf /tmp/shadowsocks/install.sh /koolshare/scripts/ss_install.sh
-	cp -rf /tmp/shadowsocks/uninstall.sh /koolshare/scripts/uninstall_shadowsocks.sh
+	cp -rf /tmp/helloworld/ss /koolshare/
+	cp -rf /tmp/helloworld/scripts/* /koolshare/scripts/
+	cp -rf /tmp/helloworld/install.sh /koolshare/scripts/ss_install.sh
+	cp -rf /tmp/helloworld/uninstall.sh /koolshare/scripts/uninstall_helloworld.sh
 	
 	echo_date "复制相关的网页文件！"
-	cp -rf /tmp/shadowsocks/webs/* /koolshare/webs/
-	cp -rf /tmp/shadowsocks/res/* /koolshare/res/
+	cp -rf /tmp/helloworld/webs/* /koolshare/webs/
+	cp -rf /tmp/helloworld/res/* /koolshare/res/
 
 	sync
 
@@ -272,13 +273,13 @@ install_now(){
 	get_ui_type
 	if [ "${UI_TYPE}" == "ROG" ];then
 		echo_date "为插件安装ROG UI..."
-		cp -rf /tmp/shadowsocks/rog/res/shadowsocks.css /koolshare/res/
+		cp -rf /tmp/helloworld/rog/res/helloworld.css /koolshare/res/
 	fi
 	
 	if [ "${UI_TYPE}" == "TUF" ];then
 		echo_date "为插件安装TUF UI..."
-		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/shadowsocks/rog/res/shadowsocks.css >/dev/null 2>&1
-		cp -rf /tmp/shadowsocks/rog/res/shadowsocks.css /koolshare/res/
+		sed -i 's/3e030d/3e2902/g;s/91071f/92650F/g;s/680516/D0982C/g;s/cf0a2c/c58813/g;s/700618/74500b/g;s/530412/92650F/g' /tmp/helloworld/rog/res/helloworld.css >/dev/null 2>&1
+		cp -rf /tmp/helloworld/rog/res/helloworld.css /koolshare/res/
 	fi
 
 	if [ "${UI_TYPE}" == "ASUSWRT" ];then
@@ -295,8 +296,8 @@ install_now(){
 	# soft links
 	echo_date "创建一些二进制文件的软链接！"
 	[ ! -L "/koolshare/bin/rss-tunnel" ] && ln -sf /koolshare/bin/rss-local /koolshare/bin/rss-tunnel
-	[ ! -L "/koolshare/init.d/S99shadowsocks.sh" ] && ln -sf /koolshare/ss/ssconfig.sh /koolshare/init.d/S99shadowsocks.sh
-	[ ! -L "/koolshare/init.d/N99shadowsocks.sh" ] && ln -sf /koolshare/ss/ssconfig.sh /koolshare/init.d/N99shadowsocks.sh
+	[ ! -L "/koolshare/init.d/S99helloworld.sh" ] && ln -sf /koolshare/ss/ssconfig.sh /koolshare/init.d/S99helloworld.sh
+	[ ! -L "/koolshare/init.d/N99helloworld.sh" ] && ln -sf /koolshare/ss/ssconfig.sh /koolshare/init.d/N99helloworld.sh
 	[ ! -L "/koolshare/init.d/S99socks5.sh" ] && ln -sf /koolshare/scripts/ss_socks5.sh /koolshare/init.d/S99socks5.sh
 
 	# default values

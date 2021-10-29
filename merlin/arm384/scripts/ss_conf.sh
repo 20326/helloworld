@@ -20,15 +20,15 @@ backup_tar(){
 	ln -sf /tmp/files /koolshare/webs/files
 	echo_date "开始打包..."
 	cd /tmp
-	mkdir shadowsocks
-	mkdir shadowsocks/bin
-	mkdir shadowsocks/scripts
-	mkdir shadowsocks/webs
-	mkdir shadowsocks/res
+	mkdir helloworld
+	mkdir helloworld/bin
+	mkdir helloworld/scripts
+	mkdir helloworld/webs
+	mkdir helloworld/res
 	echo_date "请等待一会儿..."
-	TARGET_FOLDER=/tmp/shadowsocks
+	TARGET_FOLDER=/tmp/helloworld
 	cp /koolshare/scripts/ss_install.sh $TARGET_FOLDER/install.sh
-	cp /koolshare/scripts/uninstall_shadowsocks.sh $TARGET_FOLDER/uninstall.sh
+	cp /koolshare/scripts/uninstall_helloworld.sh $TARGET_FOLDER/uninstall.sh
 	cp /koolshare/scripts/ss_* $TARGET_FOLDER/scripts/
 	cp /koolshare/bin/ss-local $TARGET_FOLDER/bin/
 	cp /koolshare/bin/ss-redir $TARGET_FOLDER/bin/
@@ -57,20 +57,20 @@ backup_tar(){
 	cp /koolshare/bin/httping $TARGET_FOLDER/bin/
 	cp /koolshare/bin/haveged $TARGET_FOLDER/bin/
 	cp /koolshare/bin/dnsmasq $TARGET_FOLDER/bin/
-	cp /koolshare/webs/Module_shadowsocks*.asp $TARGET_FOLDER/webs/
+	cp /koolshare/webs/Module_helloworld*.asp $TARGET_FOLDER/webs/
 	cp /koolshare/res/accountadd.png $TARGET_FOLDER/res/
 	cp /koolshare/res/accountdelete.png $TARGET_FOLDER/res/
 	cp /koolshare/res/accountedit.png $TARGET_FOLDER/res/
-	cp /koolshare/res/icon-shadowsocks.png $TARGET_FOLDER/res/
+	cp /koolshare/res/icon-helloworld.png $TARGET_FOLDER/res/
 	cp /koolshare/res/ss-menu.js $TARGET_FOLDER/res/
 	cp /koolshare/res/tablednd.js $TARGET_FOLDER/res/
 	cp /koolshare/res/qrcode.js $TARGET_FOLDER/res/
-	cp /koolshare/res/shadowsocks.css $TARGET_FOLDER/res/
+	cp /koolshare/res/helloworld.css $TARGET_FOLDER/res/
 	cp -r /koolshare/ss $TARGET_FOLDER/
 	rm -rf $TARGET_FOLDER/ss/*.json
-	tar -czv -f /tmp/shadowsocks.tar.gz shadowsocks/
+	tar -czv -f /tmp/helloworld.tar.gz helloworld/
 	rm -rf $TARGET_FOLDER
-	mv /tmp/shadowsocks.tar.gz /tmp/files
+	mv /tmp/helloworld.tar.gz /tmp/files
 	echo_date "打包完毕！"
 }
 
