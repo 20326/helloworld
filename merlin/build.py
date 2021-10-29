@@ -26,6 +26,7 @@ def get_or_create():
         print("config.json.js not found，build.py is root path. auto write config.json.js")
         conf["module"] = module_name
         conf["version"] = "2.0.0"
+        conf["arch"] = "arm64"
         conf["home_url"] = ("Module_%s.asp" % module_name)
         conf["title"] = "title of " + module_name
         conf["description"] = "description of " + module_name
@@ -42,11 +43,12 @@ def build_module():
         print("config.json.js file format is incorrect")
         return
 
-    if len(sys.argv) != 2:
-        print("Usage: python build.py <path>")
+    if len(sys.argv) != 3:
+        print("Usage: python build.py <path> <arch>")
         return
 
     module_root = sys.argv[1]
+    conf["arch"] = sys.argv[2]
     if "module" not in conf:
         print("module is not in config.json.js")
         return
@@ -68,11 +70,13 @@ def build_module():
         cp -rf ../rules/chnroute.txt $module_root/ss/rules/ &&  \
         cp -rf ../rules/cdn.txt $module_root/ss/rules/ && \
         cp -rf ../rules/version $module_root/ss/rules/version &&\
-        cp -f  ../binary/$module_root/xray/xray_armv7l $module_root/bin/v2ray &&\
+        cp -f  ../binary/$arch/xray/xray $module_root/bin/v2ray &&\
+        cp -f  ../binary/$arch/xray/v2ctl $module_root/bin/v2ctl &&\
         echo 'sync finished!' """)
 
     os.system(t.substitute({
         "module": conf["module"],
+        "arch": conf["arch"],
         "module_root": module_root,
     }))
 

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shadowsocks script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
+# helloworld script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
 
 source /koolshare/scripts/base.sh
 eval $(dbus export ss_basic_)
@@ -8,6 +8,32 @@ mkdir -p /tmp/upload
 echo "" > /tmp/upload/ss_log.txt
 http_response "$1"
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
+ARCH=`uname -m`
+KVER=`uname -r`
+if [ "$ARCH" == "armv7l" ]; then
+	if [ "$KVER" != "2.6.36.4brcmarm" ];then
+#bcm675x/ipq4/5/6/80xx/mt7622
+		ARCH_SUFFIX="armng"
+	else
+#bcm470x
+		ARCH_SUFFIX="arm"
+	fi
+elif [ "$ARCH" == "aarch64" ]; then
+#bcm490x
+	ARCH_SUFFIX="arm64"
+elif [ "$ARCH" == "mips" ]; then
+	if [ "$KVER" == "3.10.14" ];then
+#mtk6721
+		ARCH_SUFFIX="mipsle"
+	else
+#grx500
+		ARCH_SUFFIX="mips"
+	fi
+elif [ "$ARCH" == "mipsle" ]; then
+	ARCH_SUFFIX="mipsle"
+else
+	ARCH_SUFFIX="arm"
+fi
 main_url="https://raw.githubusercontent.com/20326/helloworld/master/merlin"
 backup_url=""
 

@@ -1,13 +1,44 @@
 #!/bin/sh
 
-# shadowsocks script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
+# helloworld script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
 
 source /koolshare/scripts/base.sh
 eval $(dbus export ss_basic_)
+
+ARCH=`uname -m`
+KVER=`uname -r`
+if [ "$ARCH" == "armv7l" ]; then
+	if [ "$KVER" != "2.6.36.4brcmarm" ];then
+#bcm675x/ipq4/5/6/80xx/mt7622
+		ARCH_SUFFIX="armng"
+	else
+#bcm470x
+		ARCH_SUFFIX="arm"
+	fi
+elif [ "$ARCH" == "aarch64" ]; then
+#bcm490x
+	ARCH_SUFFIX="arm64"
+elif [ "$ARCH" == "mips" ]; then
+	if [ "$KVER" == "3.10.14" ];then
+#mtk6721
+		ARCH_SUFFIX="mipsle"
+	else
+#grx500
+		ARCH_SUFFIX="mips"
+	fi
+elif [ "$ARCH" == "mipsle" ]; then
+	ARCH_SUFFIX="mipsle"
+else
+	ARCH_SUFFIX="arm"
+fi
+
+v2ray_bin=xray
+
 alias echo_date='echo 【$(TZ=UTC-8 date -R +%Y年%m月%d日\ %X)】:'
 V2RAY_CONFIG_FILE="/koolshare/ss/v2ray.json"
-url_main="https://raw.githubusercontent.com/20326/helloworld/master/binary/arm384/xray"
+url_main="https://raw.githubusercontent.com/20326/helloworld/master/binary/${ARCH_SUFFIX}/${v2ray_bin}"
 url_back=""
+
 
 get_latest_version(){
 	rm -rf /tmp/v2ray_latest_info.txt
@@ -60,7 +91,7 @@ update_now(){
 	mkdir -p /tmp/v2ray && cd /tmp/v2ray
 
 	echo_date "开始下载校验文件：md5sum.txt"
-	wget --no-check-certificate --timeout=20 -qO - $url_main/$1/md5sum.txt > /tmp/v2ray/md5sum.txt
+	wget --no-check-certificate --timeout=20 -qO - $url_main/$1/$2/md5sum.txt > /tmp/v2ray/md5sum.txt
 	if [ "$?" != "0" ];then
 		echo_date "md5sum.txt下载失败！"
 		md5sum_ok=0
@@ -70,7 +101,7 @@ update_now(){
 	fi
 	
 	echo_date "开始下载v2ray程序"
-	wget --no-check-certificate --timeout=20 --tries=1 $url_main/$1/v2ray
+	wget --no-check-certificate --timeout=20 --tries=1 $url_main/$1/$2/${v2ray_bin}
 	#curl -L -H "Cache-Control: no-cache" -o /tmp/v2ray/v2ray $url_main/$1/v2ray
 	if [ "$?" != "0" ];then
 		echo_date "v2ray下载失败！"
@@ -81,7 +112,7 @@ update_now(){
 	fi
 
 	echo_date "开始下载v2ctl程序"
-	wget --no-check-certificate --timeout=20 --tries=1 $url_main/$1/v2ctl
+	wget --no-check-certificate --timeout=20 --tries=1 $url_main/$1/$2/v2ctl
 	if [ "$?" != "0" ];then
 		echo_date "v2ctl下载失败！"
 		v2ctl_ok=0
@@ -168,8 +199,9 @@ case $2 in
 1)
 	echo " " > /tmp/upload/ss_log.txt
 	http_response "$1"
+	echo_date "使用xray替换v2ray"
 	echo_date "===================================================================" >> /tmp/upload/ss_log.txt
-	echo_date "                v2ray程序更新(Shell by sadog)" >> /tmp/upload/ss_log.txt
+	echo_date "                v2ray程序更新" >> /tmp/upload/ss_log.txt
 	echo_date "===================================================================" >> /tmp/upload/ss_log.txt
 	get_latest_version >> /tmp/upload/ss_log.txt 2>&1
 	echo_date "===================================================================" >> /tmp/upload/ss_log.txt

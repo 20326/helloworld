@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# shadowsocks script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
+# helloworld script for HND/AXHND router with kernel 4.1.27/4.1.51 merlin firmware
 
 source /koolshare/scripts/base.sh
 eval $(dbus export ss_basic_)
@@ -15,7 +15,7 @@ start_update(){
 	version_cdn1=$(cat /koolshare/ss/rules/version | sed -n 4p | sed 's/ /\n/g'| sed -n 1p)
 	
 	echo ==================================================================================================
-	echo_date 开始更新shadowsocks规则，请等待...
+	echo_date 开始更新helloworld规则，请等待...
 	wget --no-check-certificate --timeout=8 -qO - "$url_main"/version1 > /tmp/ss_version
 	if [ "$?" == "0" ]; then
 		echo_date 检测到在线版本文件，继续...
@@ -145,7 +145,7 @@ start_update(){
 	#======================================================================
 	# reboot ss
 	if [ "$reboot" == "1" ];then
-		echo_date 自动重启shadowsocks，以应用新的规则文件！请稍后！
+		echo_date 自动重启helloworld，以应用新的规则文件！请稍后！
 		sh /koolshare/ss/ssconfig.sh restart
 	fi
 	echo ==================================================================================================

@@ -424,7 +424,7 @@ function LoadingSSProgress(seconds) {
 	document.getElementById("LoadingBar").style.visibility = "visible";
 	if (action == 0) {
 		document.getElementById("loading_block3").innerHTML = "科学上网功能关闭中 ..."
-		$("#loading_block2").html("<li><font color='#ffcc00'><a href='https://github.com/hq450/fancyss' target='_blank'></font>插件工作有问题？请到<em>GITHUB</em>提交issue...</font></li>");
+		$("#loading_block2").html("<li><font color='#ffcc00'><a href='https://github.com/20326/helloworld' target='_blank'></font>插件工作有问题？请到<em>GITHUB</em>提交issue...</font></li>");
 	} else if (action == 1) {
 		document.getElementById("loading_block3").innerHTML = "gfwlist模式启用中 ..."
 		$("#loading_block2").html("<li><font color='#ffcc00'>此期间请勿访问屏蔽网址，以免污染DNS进入缓存</font></li><li><font color='#ffcc00'>尝试不同的DNS解析方案，可以达到最佳的效果哦...</font></li><li><font color='#ffcc00'>请等待日志显示完毕，并出现自动关闭按钮！</font></li><li><font color='#ffcc00'>在此期间请不要刷新本页面，不然可能导致问题！</font></li>");

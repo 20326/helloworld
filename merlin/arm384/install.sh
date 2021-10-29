@@ -7,7 +7,7 @@ FW_TYPE_CODE=
 FW_TYPE_NAME=
 DIR=$(cd $(dirname $0); pwd)
 module=${DIR##*/}
-echo_date "当前: ${module}"
+echo_date "当前包: ${module}"
 
 get_model(){
 	local ODMPID=$(nvram get odmpid)
@@ -109,7 +109,7 @@ exit_install(){
 install_now(){
 	# default value
 	local TITLE="HelloWorld"
-	local DESCR="HelloWorld for merlin hnd platform"
+	local DESCR="HelloWorld for everyone!"
 	local PLVER=$(cat ${DIR}/ss/version)
 
 	# stop first
@@ -309,7 +309,7 @@ install_now(){
 	[ -z "$(dbus get ss_basic_interval)" ] && dbus set ss_basic_interval=2
 
 	# 设置v2ray 版本号
-	dbus set ss_basic_v2ray_version="v4.22.0"
+	dbus set ss_basic_v2ray_version=$(v2ray version)
 
 	# dbus value
 	echo_date "设置插件安装参数..."
