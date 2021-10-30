@@ -40,7 +40,7 @@ echo =================
 # cat apnic.txt| awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' > chnroute1.txt
 
 # use ipip_country_cn ip database sync by https://github.com/firehol/blocklist-ipsets from ipip.net（source: https://cdn.ipip.net/17mon/country.zip）.
-curl https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipip_country/ipip_country_cn.netset | sed '/^#/d' >chnroute1.txt
+curl -fSL https://raw.githubusercontent.com/firehol/blocklist-ipsets/master/ipip_country/ipip_country_cn.netset | sed '/^#/d' >chnroute1.txt
 
 md5sum3=$(md5sum chnroute1.txt | sed 's/ /\n/g' | sed -n 1p)
 md5sum4=$(md5sum ../chnroute.txt | sed 's/ /\n/g' | sed -n 1p)
@@ -59,9 +59,9 @@ echo =================
 # ======================================
 # get cdn list for shadowsocks chn and game mode
 
-wget -4 https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf
-wget -4 https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf
-wget -4 https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf
+curl -fSLO https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/accelerated-domains.china.conf
+curl -fSLO https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/apple.china.conf
+curl -fSLO https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf
 
 cat accelerated-domains.china.conf apple.china.conf google.china.conf | sed '/^#/d' | sed "s/server=\/\.//g" | sed "s/server=\///g" | sed -r "s/\/\S{1,30}//g" | sed -r "s/\/\S{1,30}//g" >cdn_download.txt
 cat cdn_koolshare.txt cdn_download.txt | sort -u >cdn1.txt

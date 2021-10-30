@@ -2,13 +2,13 @@
 2mdn.net
 adservice.google.com
 app-measurement.com
-beacons2.gvt2.com
-beacons3.gvt2.com
 beacons.gcp.gvt2.com
 beacons.gvt2.com
-cache.pack.google.com
+beacons2.gvt2.com
+beacons3.gvt2.com
 c.admob.com
 c.android.clients.google.com
+cache.pack.google.com
 checkin.gstatic.com
 clickserve.dartsearch.net
 clientservices.googleapis.com
@@ -24,9 +24,10 @@ fonts.googleapis.com
 fonts.gstatic.com
 g1.gstatic.com
 g2.gstatic.com
-googleadservices.com
 google-analytics.com
+googleadservices.com
 googleanalytics.com
+googleoptimize.com
 googlesyndication.com
 googletagmanager.com
 googletagservices.com
@@ -41,7 +42,6 @@ redirector.gvt1.com
 regioninfo-pa.googleapis.com
 safebrowsing-cache.google.com
 safebrowsing.googleapis.com
-settings.crashlytics.com
 ssl-google-analytics.l.google.com
 ssl.gstatic.com
 toolbarqueries.google.com
