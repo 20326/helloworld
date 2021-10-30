@@ -18,6 +18,17 @@ def md5sum(full_path):
     with open(full_path, 'rb') as rf:
         return hashlib.md5(rf.read()).hexdigest()
 
+def get_arch_version(arch):
+    if arch == "arm64":
+        return "arm64-v8a"
+    elif arch == "armv7l":
+        return "arm32-v7a"
+    elif arch == "armv6":
+        return "arm32-v6"
+    elif arch == "armv5":
+        return "arm32-v5"
+    else:
+        return "arm"
 
 def get_or_create():
     conf_path = os.path.join(parent_path, "config.json.js")
@@ -27,6 +38,7 @@ def get_or_create():
         conf["module"] = module_name
         conf["version"] = "2.0.0"
         conf["arch"] = "arm64"
+        conf["archver"] = get_arch_version("arm64")
         conf["home_url"] = ("Module_%s.asp" % module_name)
         conf["title"] = "title of " + module_name
         conf["description"] = "description of " + module_name
@@ -49,6 +61,7 @@ def build_module():
 
     module_root = sys.argv[1]
     conf["arch"] = sys.argv[2]
+    conf["archver"] = get_arch_version(conf["arch"])
     if "module" not in conf:
         print("module is not in config.json.js")
         return
@@ -70,13 +83,13 @@ def build_module():
         cp -rf ../rules/chnroute.txt $module_root/ss/rules/ &&  \
         cp -rf ../rules/cdn.txt $module_root/ss/rules/ && \
         cp -rf ../rules/version.sum $module_root/ss/rules/version &&\
-        cp -f  ../binary/$arch/xray/xray $module_root/bin/v2ray &&\
-        cp -f  ../binary/$arch/xray/v2ctl $module_root/bin/v2ctl &&\
+        cp -vf  ../binary/xray/v2ctl_$archver $module_root/bin/v2ctl &&\
+        cp -vf  ../binary/xray/xray_$archver $module_root/bin/v2ray &&\
         echo 'sync finished!' """)
 
     os.system(t.substitute({
         "module": conf["module"],
-        "arch": conf["arch"],
+        "archver": conf["archver"],
         "module_root": module_root,
     }))
 
