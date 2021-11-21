@@ -853,6 +853,12 @@ create_dnsmasq_conf() {
 		echo "ipset=/.github.com/router" >>/tmp/wblist.conf
 		echo "server=/.github.io/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
 		echo "ipset=/.github.io/router" >>/tmp/wblist.conf
+		echo "server=/.api.github.io/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
+		echo "ipset=/.api.github.io/router" >>/tmp/wblist.conf
+		echo "server=/.user-images.githubusercontent.com/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
+		echo "ipset=/.user-images.githubusercontent.com/router" >>/tmp/wblist.conf
+		echo "server=/.avatars.githubusercontent.com/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
+		echo "ipset=/.avatars.githubusercontent.com/router" >>/tmp/wblist.conf
 		echo "server=/.raw.githubusercontent.com/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
 		echo "ipset=/.raw.githubusercontent.com/router" >>/tmp/wblist.conf
 		echo "server=/.adblockplus.org/127.0.0.1#$DNSF_PORT" >>/tmp/wblist.conf
