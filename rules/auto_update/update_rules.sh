@@ -8,8 +8,8 @@ CurrentDate=$(date +%Y-%m-%d)
 temporary_file=$(mktemp) || temporary_file='domain_list.txt'
 
 # convert gfwlist.txt
-baseurl='https://raw.githubusercontent.com/Loukky/gfwlist-by-loukky/master/gfwlist.txt'
-#baseurl='https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt'
+#baseurl='https://raw.githubusercontent.com/Loukky/gfwlist-by-loukky/master/gfwlist.txt'
+baseurl='https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt'
 
 curl -4sSkL ${baseurl} | base64 -d | { perl -pe '
 if (/URL Keywords/i) { $null = <> until $null =~ /^!/ }
@@ -90,7 +90,7 @@ curl -fSLO https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/mast
 curl -fSLO https://raw.githubusercontent.com/felixonmars/dnsmasq-china-list/master/google.china.conf
 
 cat accelerated-domains.china.conf apple.china.conf google.china.conf | sed '/^#/d' | sed "s/server=\/\.//g" | sed "s/server=\///g" | sed -r "s/\/\S{1,30}//g" | sed -r "s/\/\S{1,30}//g" >cdn_download.txt
-cat cdn_koolshare.txt cdn_download.txt | sort -u >cdn1.txt
+cat cdn_koolshare.txt cdn_custom.txt cdn_download.txt| sort -u >cdn1.txt
 
 md5sum5=$(md5sum cdn1.txt | sed 's/ /\n/g' | sed -n 1p)
 md5sum6=$(md5sum ../cdn.txt | sed 's/ /\n/g' | sed -n 1p)
