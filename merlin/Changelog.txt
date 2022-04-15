@@ -3,3 +3,7 @@ HelloWorld Changelog
 2.0.0
    - 使用xray替换v2ray
    - 增加vless支持
+2.0.1
+   - 更新xray 1.5.3
+
+

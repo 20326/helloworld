@@ -54,8 +54,8 @@ update_release() {
     tar xzvf ${DOWNLOAD_FILE} -C ./
 
     if [ -n "$UPX" ]; then
-        upx --lzma --$UPX -o ${PROJECT}_${ARCH} ${PROJECT}
-        # mv ${PROJECT}_${ARCH} ${PROJECT}
+        upx --lzma --$UPX -o ${PROJECT}_${ARCH}.tmp ${PROJECT}
+        mv ${PROJECT}_${ARCH}.tmp ${PROJECT}_${ARCH}
     fi
 
     # rm file

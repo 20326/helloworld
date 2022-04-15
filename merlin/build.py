@@ -36,7 +36,7 @@ def get_or_create():
     if not os.path.isfile(conf_path):
         print("config.json.js not found，build.py is root path. auto write config.json.js")
         conf["module"] = module_name
-        conf["version"] = "2.0.0"
+        conf["version"] = "2.0.1"
         conf["arch"] = "arm64"
         conf["archver"] = get_arch_version("arm64")
         conf["home_url"] = ("Module_%s.asp" % module_name)
