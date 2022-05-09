@@ -40,8 +40,8 @@ show_help() {
 update_release() {
     # fetch latest json
     LATEST=$(curl -fsSL "${VERSION_URL}" )
-    VERSION_TAG=$(echo "${LATEST}" | grep 'tag_name' | cut -d'"' -f4 | sed 's/v//' )
-    DOWNLOAD_URL=$(echo "${LATEST}" | grep 'browser_download_url.*.zip\"' | cut -d'"' -f4 | grep "${PLATFORM}-${ARCH}")
+    VERSION_TAG=$(echo "${LATEST}" | jq -r '.tag_name' | head -1)
+    DOWNLOAD_URL=$(echo "${LATEST}" | jq -r '.assets[].browser_download_url' |grep -v ".dgst"| grep "${PLATFORM}-${ARCH}")
     DOWNLOAD_FILE="${DOWNLOAD_URL##*/}"
 
     # download zip
