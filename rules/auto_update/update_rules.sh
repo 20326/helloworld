@@ -107,7 +107,7 @@ echo =================
 echo "use apnic data"
 # ======================================
 # use apnic data
-curl -4sSkL http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest >apnic.txt
+curl -fSL http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest >apnic.txt
 cat apnic.txt | awk -F\| '/CN\|ipv4/ { printf("%s/%d\n", $4, 32-log($5)/log(2)) }' >chnroute1.txt
 
 echo -e "[Local Routing]\n## China mainland routing blocks\n## Sources: https://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest" >Routing.txt
