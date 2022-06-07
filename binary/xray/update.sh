@@ -17,7 +17,7 @@ PLATFORM="linux"
 # upx best | ultra-brute
 UPX="best"
 # arch arm64-v8a | arm32-v7a | arm32-v6
-ARCH="arm32-v7a"
+ARCH="arm64-v8a"
 
 # fonts color
 BOLD(){
@@ -51,9 +51,11 @@ update_release() {
 
     # tar and upx
     BOLD "Tar ${DOWNLOAD_FILE}"
+    rm xray
     tar xzvf ${DOWNLOAD_FILE} -C ./
 
     if [ -n "$UPX" ]; then
+        echo "upx --lzma --$UPX -o ${PROJECT}_${ARCH}.tmp ${PROJECT}"
         upx --lzma --$UPX -o ${PROJECT}_${ARCH}.tmp ${PROJECT}
         mv ${PROJECT}_${ARCH}.tmp ${PROJECT}_${ARCH}
     fi

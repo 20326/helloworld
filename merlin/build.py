@@ -9,6 +9,7 @@ import codecs
 import hashlib
 import platform
 from string import Template
+import shutil
 
 parent_path = os.path.dirname(os.path.realpath(__file__))
 module_name = "helloworld"
@@ -17,6 +18,7 @@ module_name = "helloworld"
 def md5sum(full_path):
     with open(full_path, 'rb') as rf:
         return hashlib.md5(rf.read()).hexdigest()
+
 
 def get_arch_version(arch):
     if arch == "arm64":
@@ -30,13 +32,14 @@ def get_arch_version(arch):
     else:
         return "arm"
 
+
 def get_or_create():
     conf_path = os.path.join(parent_path, "config.json.js")
     conf = {}
     if not os.path.isfile(conf_path):
         print("config.json.js not found，build.py is root path. auto write config.json.js")
         conf["module"] = module_name
-        conf["version"] = "2.0.5"
+        conf["version"] = "2.0.7"
         conf["arch"] = "arm64"
         conf["archver"] = get_arch_version("arm64")
         conf["home_url"] = ("Module_%s.asp" % module_name)
@@ -96,19 +99,37 @@ def build_module():
 
     print("build...")
     if platform.system() == "Darwin":
-        t = Template("cd $parent_path && rm -vf $module.tar.gz && tar -zcf $module.tar.gz --exclude=.DS_Store -s /^$module_root/$module/ $module_root")
+        t = Template("""\
+            cd $parent_path && \
+            echo 'build $module.$arch.$version.tar.gz' && \
+            rm -vf $module.$arch.$version.tar.gz && \
+            tar -zcf $module.$arch.$version.tar.gz --exclude=.DS_Store -s /^$module_root/$module/ $module_root
+            """)
     else:
-        t = Template("cd $parent_path && rm -vf $module.tar.gz && tar -zcf $module.tar.gz --exclude=.DS_Store --transform s/$module_root/$module/ $module_root")
+        t = Template("""\
+            cd $parent_path && \
+            echo 'build $module.$arch.$version.tar.gz ' && \
+            rm -vf $module.$arch.$version.tar.gz && \
+            tar -zcf $module.$arch.$version.tar.gz --exclude=.DS_Store --transform s/$module_root/$module/ $module_root
+            """)
     os.system(t.substitute({
         "parent_path": parent_path,
         "module": conf["module"],
         "module_root": module_root,
+        "arch": conf["arch"],
+        "version": conf["version"],
     }))
-    conf["md5"] = md5sum(os.path.join(parent_path, conf["module"] + ".tar.gz"))
+
+    tar_file = conf["module"] + "." + conf["arch"] + "." + conf["version"] + ".tar.gz"
+    tar_path = os.path.join(parent_path, tar_file)
+
+    shutil.copy(tar_path, "../release/" + tar_file)
+
+    conf["md5"] = md5sum(tar_path)
     conf_path = os.path.join(parent_path, "config.json.js")
     with codecs.open(conf_path, "w", "utf-8") as fw:
         json.dump(conf, fw, sort_keys=True, indent=4, ensure_ascii=False)
-    print("build done", conf["module"] + ".tar.gz")
+    print("build ", conf["module"] + "." + conf["arch"] + "." + conf["version"] + ".tar.gz", " done!")
     hook_path = os.path.join(parent_path, "backup.sh")
     if os.path.isfile(hook_path):
         os.system(hook_path)

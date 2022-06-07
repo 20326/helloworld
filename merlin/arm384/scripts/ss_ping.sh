@@ -40,7 +40,7 @@ start_ping(){
 	CURR_LINE=$(cat /tmp/ping.txt|wc -l)
 	while [ "$CURR_LINE" -lt "$TOTAL_LINE" ]
 	do
-		usleep 200000
+		usleep 300000
 		CURR_LINE=$(cat /tmp/ping.txt|wc -l)
 	done
 	response_text=$(cat /tmp/ping.txt|sort -t '>' -nk1|sed 's/^/["/g'|sed 's/>/","/g'|sed 's/$/"],/g'|sed 's/failed//g'|sed ':a;N;$!ba;s#\n##g'|sed 's/,$/]/g'|sed 's/^/[/g'|base64|sed ':a;N;$!ba;s#\n##g')
@@ -51,7 +51,7 @@ start_ping(){
 if [ -n "$(pidof ping)" ] && [ -n "$(pidof ss_ping.sh)" ] && [ -f "/tmp/ss_ping.lock" ]; then
 	while [ -n "$(pidof ping)" ]
 	do
-		usleep 500000
+		usleep 600000
 	done
 	sleep 2
 	response_text=$(cat /tmp/ping.txt|sort -t '>' -nk1|sed 's/^/["/g'|sed 's/>/","/g'|sed 's/$/"],/g'|sed 's/failed//g'|sed ':a;N;$!ba;s#\n##g'|sed 's/,$/]/g'|sed 's/^/[/g'|base64|sed ':a;N;$!ba;s#\n##g')
