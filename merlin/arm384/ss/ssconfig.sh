@@ -1735,6 +1735,7 @@ start_v2ray() {
 	# v2ray start
 	cd /koolshare/bin
 	#export GOGC=30
+	cp /koolshare/ss/v2ray.json /koolshare/ss/v2ray.bak.json
 	v2ray --config=/koolshare/ss/v2ray.json >/dev/null 2>&1 &
 	local V2PID
 	local i=10
