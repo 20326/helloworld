@@ -1718,7 +1718,9 @@ creat_v2ray_json() {
 		echo_date $result
 		echo_date V2Ray配置文件通过测试!!!
 	else
+	  result=$(v2ray -test -config="$V2RAY_CONFIG_FILE")
 		echo_date V2Ray配置文件没有通过测试，请检查设置!!!
+		echo $result
 		rm -rf "$V2RAY_CONFIG_FILE_TMP"
 		rm -rf "$V2RAY_CONFIG_FILE"
 		close_in_five

@@ -35,12 +35,12 @@ start_ping(){
 		} &
 		done
 	fi
-	sleep 2
+	sleep 3
 	TOTAL_LINE=$(dbus list ssconf_basic_server_|grep -v "server_ip"|sort -n -t "_" -k 4|wc -l)
 	CURR_LINE=$(cat /tmp/ping.txt|wc -l)
 	while [ "$CURR_LINE" -lt "$TOTAL_LINE" ]
 	do
-		usleep 300000
+		usleep 200000
 		CURR_LINE=$(cat /tmp/ping.txt|wc -l)
 	done
 	response_text=$(cat /tmp/ping.txt|sort -t '>' -nk1|sed 's/^/["/g'|sed 's/>/","/g'|sed 's/$/"],/g'|sed 's/failed//g'|sed ':a;N;$!ba;s#\n##g'|sed 's/,$/]/g'|sed 's/^/[/g'|base64|sed ':a;N;$!ba;s#\n##g')
@@ -51,9 +51,9 @@ start_ping(){
 if [ -n "$(pidof ping)" ] && [ -n "$(pidof ss_ping.sh)" ] && [ -f "/tmp/ss_ping.lock" ]; then
 	while [ -n "$(pidof ping)" ]
 	do
-		usleep 600000
+		usleep 500000
 	done
-	sleep 2
+	sleep 3
 	response_text=$(cat /tmp/ping.txt|sort -t '>' -nk1|sed 's/^/["/g'|sed 's/>/","/g'|sed 's/$/"],/g'|sed 's/failed//g'|sed ':a;N;$!ba;s#\n##g'|sed 's/,$/]/g'|sed 's/^/[/g'|base64|sed ':a;N;$!ba;s#\n##g')
 	http_response "$response_text"
 	rm -rf /tmp/ss_ping.lock
