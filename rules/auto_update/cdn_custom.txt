@@ -3,8 +3,12 @@ taobao.com
 m.taobao.com
 tmall.com
 m.tmall.com
+tmall.hk
+m.tmall.hk
 jd.com
 m.jd.com
+jd.com
+m.jd.hk
 360buyimg.com
 qq.com
 m.qq.com
@@ -116,3 +120,5 @@ dnsoray.net
 china-channel.com
 chinaspeeds.com
 chinaspeeds.net
+
+apply.run

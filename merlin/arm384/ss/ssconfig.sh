@@ -1522,6 +1522,9 @@ creat_v2ray_json() {
 		# if [ -n $ss_basic_v2ray_protocol  ]; then
 		# 	ss_basic_v2ray_protocol="vmess"
 		# fi
+    if [ "$ss_basic_v2ray_protocol" == "vless" ]; then
+      ss_basic_v2ray_mux_enable=0
+    fi
 		cat >>"$V2RAY_CONFIG_FILE_TMP" <<-EOF
 			"outbounds": [
 				{
