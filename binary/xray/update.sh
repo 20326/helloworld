@@ -11,7 +11,8 @@
 # Name
 PROJECT="xray"
 # Version link
-VERSION_URL="https://api.github.com/repos/XTLS/Xray-core/releases/latest"
+#VERSION_URL="https://api.github.com/repos/XTLS/Xray-core/releases/latest"
+VERSION_URL="https://api.github.com/repos/XTLS/Xray-core/releases/tags/v1.5.8"
 
 PLATFORM="linux"
 # upx best | ultra-brute
