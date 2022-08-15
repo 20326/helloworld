@@ -45,17 +45,10 @@ backup_tar(){
 	cp /koolshare/bin/chinadns-ng $TARGET_FOLDER/bin/
 	cp /koolshare/bin/smartdns $TARGET_FOLDER/bin/
 	cp /koolshare/bin/resolveip $TARGET_FOLDER/bin/
-	cp /koolshare/bin/haproxy $TARGET_FOLDER/bin/
-	cp /koolshare/bin/client_linux_arm7 $TARGET_FOLDER/bin/
-	cp /koolshare/bin/speeder* $TARGET_FOLDER/bin/
-	cp /koolshare/bin/udp2raw $TARGET_FOLDER/bin/
 	cp /koolshare/bin/jq $TARGET_FOLDER/bin/
 	cp /koolshare/bin/v2ray $TARGET_FOLDER/bin/
-	cp /koolshare/bin/v2ctl $TARGET_FOLDER/bin/
-	cp /koolshare/bin/v2ray-plugin $TARGET_FOLDER/bin/
 	cp /koolshare/bin/https_dns_proxy $TARGET_FOLDER/bin/
 	cp /koolshare/bin/httping $TARGET_FOLDER/bin/
-	cp /koolshare/bin/haveged $TARGET_FOLDER/bin/
 	cp /koolshare/bin/dnsmasq $TARGET_FOLDER/bin/
 	cp /koolshare/webs/Module_helloworld*.asp $TARGET_FOLDER/webs/
 	cp /koolshare/res/accountadd.png $TARGET_FOLDER/res/

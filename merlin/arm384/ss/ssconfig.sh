@@ -293,51 +293,51 @@ kill_process() {
 		echo_date 关闭smartdns进程...
 		killall smartdns >/dev/null 2>&1
 	fi
-	koolgame_process=$(pidof koolgame)
-	if [ -n "$koolgame_process" ]; then
-		echo_date 关闭koolgame进程...
-		killall koolgame >/dev/null 2>&1
-	fi
+#	koolgame_process=$(pidof koolgame)
+#	if [ -n "$koolgame_process" ]; then
+#		echo_date 关闭koolgame进程...
+#		killall koolgame >/dev/null 2>&1
+#	fi
 	pdu_process=$(pidof pdu)
 	if [ -n "$pdu_process" ]; then
 		echo_date 关闭pdu进程...
 		kill -9 $pdu >/dev/null 2>&1
 	fi
-	client_linux_arm7_process=$(pidof client_linux_arm7)
-	if [ -n "$client_linux_arm7_process" ]; then
-		echo_date 关闭kcp协议进程...
-		killall client_linux_arm7 >/dev/null 2>&1
-	fi
-	haproxy_process=$(pidof haproxy)
-	if [ -n "$haproxy_process" ]; then
-		echo_date 关闭haproxy进程...
-		killall haproxy >/dev/null 2>&1
-	fi
-	speederv1_process=$(pidof speederv1)
-	if [ -n "$speederv1_process" ]; then
-		echo_date 关闭speederv1进程...
-		killall speederv1 >/dev/null 2>&1
-	fi
-	speederv2_process=$(pidof speederv2)
-	if [ -n "$speederv2_process" ]; then
-		echo_date 关闭speederv2进程...
-		killall speederv2 >/dev/null 2>&1
-	fi
-	ud2raw_process=$(pidof udp2raw)
-	if [ -n "$ud2raw_process" ]; then
-		echo_date 关闭ud2raw进程...
-		killall udp2raw >/dev/null 2>&1
-	fi
+#	client_linux_arm7_process=$(pidof client_linux_arm7)
+#	if [ -n "$client_linux_arm7_process" ]; then
+#		echo_date 关闭kcp协议进程...
+#		killall client_linux_arm7 >/dev/null 2>&1
+#	fi
+#	haproxy_process=$(pidof haproxy)
+#	if [ -n "$haproxy_process" ]; then
+#		echo_date 关闭haproxy进程...
+#		killall haproxy >/dev/null 2>&1
+#	fi
+#	speederv1_process=$(pidof speederv1)
+#	if [ -n "$speederv1_process" ]; then
+#		echo_date 关闭speederv1进程...
+#		killall speederv1 >/dev/null 2>&1
+#	fi
+#	speederv2_process=$(pidof speederv2)
+#	if [ -n "$speederv2_process" ]; then
+#		echo_date 关闭speederv2进程...
+#		killall speederv2 >/dev/null 2>&1
+#	fi
+#	ud2raw_process=$(pidof udp2raw)
+#	if [ -n "$ud2raw_process" ]; then
+#		echo_date 关闭ud2raw进程...
+#		killall udp2raw >/dev/null 2>&1
+#	fi
 	https_dns_proxy_process=$(pidof https_dns_proxy)
 	if [ -n "$https_dns_proxy_process" ]; then
 		echo_date 关闭https_dns_proxy进程...
 		killall https_dns_proxy >/dev/null 2>&1
 	fi
-	haveged_process=$(pidof haveged)
-	if [ -n "$haveged_process" ]; then
-		echo_date 关闭haveged进程...
-		killall haveged >/dev/null 2>&1
-	fi
+#	haveged_process=$(pidof haveged)
+#	if [ -n "$haveged_process" ]; then
+#		echo_date 关闭haveged进程...
+#		killall haveged >/dev/null 2>&1
+#	fi
 
 	# close tcp_fastopen
 	echo 1 >/proc/sys/net/ipv4/tcp_fastopen
@@ -1027,32 +1027,32 @@ start_kcp() {
 	# Start kcp
 	if [ "$ss_basic_use_kcp" == "1" ]; then
 		echo_date 启动KCP协议进程，为了更好的体验，建议在路由器上创建虚拟内存.
-		export GOGC=30
-		[ -z "$ss_basic_kcp_server" ] && ss_basic_kcp_server="$ss_basic_server"
-		if [ "$ss_basic_kcp_method" == "1" ]; then
-			[ -n "$ss_basic_kcp_encrypt" ] && KCP_CRYPT="--crypt $ss_basic_kcp_encrypt"
-			[ -n "$ss_basic_kcp_password" ] && KCP_KEY="--key $ss_basic_kcp_password" || KCP_KEY=""
-			[ -n "$ss_basic_kcp_sndwnd" ] && KCP_SNDWND="--sndwnd $ss_basic_kcp_sndwnd" || KCP_SNDWND=""
-			[ -n "$ss_basic_kcp_rcvwnd" ] && KCP_RNDWND="--rcvwnd $ss_basic_kcp_rcvwnd" || KCP_RNDWND=""
-			[ -n "$ss_basic_kcp_mtu" ] && KCP_MTU="--mtu $ss_basic_kcp_mtu" || KCP_MTU=""
-			[ -n "$ss_basic_kcp_conn" ] && KCP_CONN="--conn $ss_basic_kcp_conn" || KCP_CONN=""
-			[ "$ss_basic_kcp_nocomp" == "1" ] && COMP="--nocomp" || COMP=""
-			[ -n "$ss_basic_kcp_mode" ] && KCP_MODE="--mode $ss_basic_kcp_mode" || KCP_MODE=""
-
-			start-stop-daemon -S -q -b -m \
-				-p /tmp/var/kcp.pid \
-				-x /koolshare/bin/client_linux_arm7 \
-				-- -l 127.0.0.1:1091 \
-				-r $ss_basic_kcp_server:$ss_basic_kcp_port \
-				$KCP_CRYPT $KCP_KEY $KCP_SNDWND $KCP_RNDWND $KCP_MTU $KCP_CONN $COMP $KCP_MODE $ss_basic_kcp_extra
-		else
-			start-stop-daemon -S -q -b -m \
-				-p /tmp/var/kcp.pid \
-				-x /koolshare/bin/client_linux_arm7 \
-				-- -l 127.0.0.1:1091 \
-				-r $ss_basic_kcp_server:$ss_basic_kcp_port \
-				$ss_basic_kcp_parameter
-		fi
+#		export GOGC=30
+#		[ -z "$ss_basic_kcp_server" ] && ss_basic_kcp_server="$ss_basic_server"
+#		if [ "$ss_basic_kcp_method" == "1" ]; then
+#			[ -n "$ss_basic_kcp_encrypt" ] && KCP_CRYPT="--crypt $ss_basic_kcp_encrypt"
+#			[ -n "$ss_basic_kcp_password" ] && KCP_KEY="--key $ss_basic_kcp_password" || KCP_KEY=""
+#			[ -n "$ss_basic_kcp_sndwnd" ] && KCP_SNDWND="--sndwnd $ss_basic_kcp_sndwnd" || KCP_SNDWND=""
+#			[ -n "$ss_basic_kcp_rcvwnd" ] && KCP_RNDWND="--rcvwnd $ss_basic_kcp_rcvwnd" || KCP_RNDWND=""
+#			[ -n "$ss_basic_kcp_mtu" ] && KCP_MTU="--mtu $ss_basic_kcp_mtu" || KCP_MTU=""
+#			[ -n "$ss_basic_kcp_conn" ] && KCP_CONN="--conn $ss_basic_kcp_conn" || KCP_CONN=""
+#			[ "$ss_basic_kcp_nocomp" == "1" ] && COMP="--nocomp" || COMP=""
+#			[ -n "$ss_basic_kcp_mode" ] && KCP_MODE="--mode $ss_basic_kcp_mode" || KCP_MODE=""
+#
+#			start-stop-daemon -S -q -b -m \
+#				-p /tmp/var/kcp.pid \
+#				-x /koolshare/bin/client_linux_arm7 \
+#				-- -l 127.0.0.1:1091 \
+#				-r $ss_basic_kcp_server:$ss_basic_kcp_port \
+#				$KCP_CRYPT $KCP_KEY $KCP_SNDWND $KCP_RNDWND $KCP_MTU $KCP_CONN $COMP $KCP_MODE $ss_basic_kcp_extra
+#		else
+#			start-stop-daemon -S -q -b -m \
+#				-p /tmp/var/kcp.pid \
+#				-x /koolshare/bin/client_linux_arm7 \
+#				-- -l 127.0.0.1:1091 \
+#				-r $ss_basic_kcp_server:$ss_basic_kcp_port \
+#				$ss_basic_kcp_parameter
+#		fi
 	fi
 }
 
@@ -2183,10 +2183,10 @@ set_sys() {
 	# more entropy
 	# use command `cat /proc/sys/kernel/random/entropy_avail` to check current entropy
 	# from merlin fw 386.2, jitterentropy-rngd has been intergrated into fw
-	if [ -z "$(which jitterentropy-rngd)" -a -f "/koolshare/bin/haveged" ];then
-		echo_date "启动haveged，为系统提供更多的可用熵！"
-		haveged -w 1024 >/dev/null 2>&1
-	fi
+  #	if [ -z "$(which jitterentropy-rngd)" -a -f "/koolshare/bin/haveged" ];then
+  #		echo_date "启动haveged，为系统提供更多的可用熵！"
+  #		haveged -w 1024 >/dev/null 2>&1
+  #	fi
 }
 
 remove_ss_reboot_job() {

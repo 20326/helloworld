@@ -111,7 +111,6 @@ check_status() {
 	CHINADNS1=$(pidof chinadns1)
 	CHINADNS=$(pidof chinadns)
 	CHINADNS_NG=$(pidof chinadns-ng)
-	KCPTUN=$(pidof client_linux_arm7)
 	HAPROXY=$(pidof haproxy)
 	V2RAY=$(pidof v2ray)
 	HDP=$(pidof https_dns_proxy)
