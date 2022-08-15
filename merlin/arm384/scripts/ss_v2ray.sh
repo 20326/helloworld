@@ -55,7 +55,7 @@ get_latest_version(){
 		fi
 		V2VERSION=`cat /tmp/v2ray_latest_info.txt | sed 's/v//g'` || 0
 		echo_date "检测到V2Ray最新版本：v$V2VERSION"
-		if [ ! -f "/koolshare/bin/v2ray" -o ! -f "/koolshare/bin/v2ctl" ];then
+		if [ ! -f "/koolshare/bin/v2ray" ];then
 			echo_date "v2ray安装文件丢失！重新下载！"
 			CUR_VER="0"
 		else
@@ -111,17 +111,17 @@ update_now(){
 		echo_date "v2ray程序下载成功..."
 	fi
 
-	echo_date "开始下载v2ctl程序"
-	wget --no-check-certificate --timeout=20 --tries=1 $url_main/$1/$2/v2ctl
-	if [ "$?" != "0" ];then
-		echo_date "v2ctl下载失败！"
-		v2ctl_ok=0
-	else
-		v2ctl_ok=1
-		echo_date "v2ctl程序下载成功..."
-	fi
+#	echo_date "开始下载v2ctl程序"
+#	wget --no-check-certificate --timeout=20 --tries=1 $url_main/$1/$2/v2ctl
+#	if [ "$?" != "0" ];then
+#		echo_date "v2ctl下载失败！"
+#		v2ctl_ok=0
+#	else
+#		v2ctl_ok=1
+#		echo_date "v2ctl程序下载成功..."
+#	fi
 
-	if [ "$md5sum_ok=1" ] && [ "$v2ray_ok=1" ] && [ "$v2ctl_ok=1" ];then
+	if [ "$md5sum_ok=1" ] && [ "$v2ray_ok=1" ];then
 		check_md5sum
 	else
 		echo_date "使用备用服务器下载..."
@@ -137,9 +137,9 @@ check_md5sum(){
 	echo_date "校验下载的文件!"
 	V2RAY_LOCAL_MD5=`md5sum v2ray|awk '{print $1}'`
 	V2RAY_ONLINE_MD5=`cat md5sum.txt|grep -w v2ray|awk '{print $1}'`
-	V2CTL_LOCAL_MD5=`md5sum v2ctl|awk '{print $1}'`
-	V2CTL_ONLINE_MD5=`cat md5sum.txt|grep v2ctl|awk '{print $1}'`
-	if [ "$V2RAY_LOCAL_MD5"x = "$V2RAY_ONLINE_MD5"x ] && [ "$V2CTL_LOCAL_MD5"x = "$V2CTL_ONLINE_MD5"x ];then
+#	V2CTL_LOCAL_MD5=`md5sum v2ctl|awk '{print $1}'`
+#	V2CTL_ONLINE_MD5=`cat md5sum.txt|grep v2ctl|awk '{print $1}'`
+	if [ "$V2RAY_LOCAL_MD5"x = "$V2RAY_ONLINE_MD5"x ] ;then
 		echo_date "文件校验通过!"
 		install_binary
 	else

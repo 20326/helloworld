@@ -239,7 +239,7 @@ install_now(){
 	else
 		echo_date 当前jffs分区剩余"$SPACE_AVAL" KB, 插件安装大概需要"$SPACE_NEED" KB，空间不足！
 		echo_date 退出安装！
-		exit 1
+		#exit 1
 	fi
 
 	# isntall file

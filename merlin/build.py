@@ -87,7 +87,6 @@ def build_module():
         cp -rf ../rules/cdn.txt $module_root/ss/rules/ && \
         cp -rf ../rules/version.sum $module_root/ss/rules/version &&\
         cp -vf ../binary/chinadns-ng/chinadns-ng_$archver $module_root/bin/chinadns-ng &&\
-        cp -vf ../binary/xray/v2ctl_$archver $module_root/bin/v2ctl &&\
         cp -vf ../binary/xray/xray_$archver $module_root/bin/v2ray &&\
         echo 'sync finished!' """)
 
